@@ -1,6 +1,9 @@
 import os
 import numpy as np
 
+# Redefine np.float to be an alias for np.float64
+np.float = float
+
 def intersection_batch(bboxes1, bboxes2):
     bboxes2 = np.expand_dims(bboxes2, 0)
     bboxes1 = np.expand_dims(bboxes1, 1)
@@ -633,7 +636,7 @@ def associate_4_points_with_score_with_reid(detections, trackers, iou_threshold,
     if with_longterm_reid_correction:
         for m in matched_indices:
             if (emb_cost[m[0], m[1]] > longterm_reid_correction_thresh) and (iou_matrix_thre[m[0], m[1]] < iou_threshold):
-                print("correction:", emb_cost[m[0], m[1]])
+                # print("correction:", emb_cost[m[0], m[1]])
                 unmatched_detections.append(m[0])
                 unmatched_trackers.append(m[1])
             else:

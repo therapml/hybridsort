@@ -9,6 +9,9 @@ from .association import *
 from collections import deque       # [hgx0418] deque for reid feature
 np.random.seed(0)
 
+# Redefine np.float to be an alias for np.float64
+np.float = float
+
 def k_previous_obs(observations, cur_age, k):
     if len(observations) == 0:
         return [-1, -1, -1, -1, -1]
@@ -372,7 +375,7 @@ class Hybrid_Sort_ReID(object):
         for t, trk in enumerate(trks):
             pos, kalman_score, simple_score = self.trackers[t].predict()
             try:
-                trk[:] = [pos[0][0], pos[0][1], pos[0][2], pos[0][3], kalman_score, simple_score[0]]
+                trk[:] = [pos[0][0], pos[0][1], pos[0][2], pos[0][3], kalman_score[0], simple_score]
             except:
                 trk[:] = [pos[0][0], pos[0][1], pos[0][2], pos[0][3], kalman_score, simple_score]
             if np.any(np.isnan(pos)):
@@ -414,7 +417,7 @@ class Hybrid_Sort_ReID(object):
                     longterm_reid_weight=self.args.longterm_reid_weight,
                     with_longterm_reid_correction=self.args.with_longterm_reid_correction,
                     longterm_reid_correction_thresh=self.args.longterm_reid_correction_thresh,
-                    dataset=self.args.dataset)
+                )
             else:
                 matched, unmatched_dets, unmatched_trks = associate_4_points_with_score_with_reid(
                     dets, trks, self.iou_threshold, velocities_lt, velocities_rt, velocities_lb, velocities_rb,
